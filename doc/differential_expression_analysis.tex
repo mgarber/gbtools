@@ -1,0 +1,167 @@
+\documentclass[11pt]{article}
+%\documentclass{bioinfo}
+%\copyrightyear{2008}
+%\pubyear{2008}
+
+\usepackage{amsmath, geometry, natbib, graphicx, color}
+\usepackage[bookmarks=false,colorlinks=true,linkcolor={blue},pdfstartview={XYZ null null 1.22}]{hyperref}
+\begin{document}
+
+\title{Tilling Array Analysis}
+\author{Mitch  Guttman, Manuel Garber}
+\date{}
+\maketitle
+\section{Data segmentation}
+Tilling array experiments result in signal coming from probes overlapping a region of interest. Because probes are not optimized to have similar hybridization properties, single probe information is extremely noisy. However, taken as a set, these probes are a powerful tool to find regions that are whose overall hybridization signal in a  sample is at levels above background noise. 
+
+We treat the problem of finding regions with signal above background as a segmentation problem. Example ussages are:
+\begin{itemize}
+\item Finding exon structures within large regions: Given a large genomic region that is known to be spliced and expressed, a tilling array can give rough estimates to its exonic structure.
+\item For transcripts not present in regular expression arrays, a tilling exon array can be used to evaluate the expression levels of the regions of interest.
+\end{itemize}
+
+\subsection{Normalizing data}
+The first step to all analysis is to normalize the probe-set. This can be done to each data file independently or to a group of related data files together. By default each sample will be mean centered and $log_2$-transformed
+
+\subsubsection{Normalization command}
+{\bf Command}: java -jar pda--$<$version$>$.jar -task 1 $<${\em parameters}$>$ 
+
+{\bf Parameters:}
+\begin{itemize}
+\item {\em -in} File to normalize, for multiple files see {\em -indir}.
+\item {\em -indir} Input directory containing files to normalize together. You must specify an {\em -ext }
+\item {\em -ext} File extension of files in the {\em -indir} provided
+\end{itemize}
+{\bf Optional paramters:}
+\begin{itemize}
+\item {\em -chr} If only data for one chromosome is of interest.
+\item {\em -format} Format of the input file(s) can be any off GFF, BED or generic. Default is GFF
+\item {\em -floor} Minimum intensity value, all values less than the provided floor will be set to this parameter value
+\item {\em -gp} If this flag is set, the output will be written as a GCT file and can be readily used in Gene pattern
+\item {\em -qn} If this flag is set, data will be quantile normalized instead of just mean centered. Quantile normalization will match up values across all the arrays so that the smallest value on each array is identical, the second smallest is identical, and so forth. Note that the smallest value for one array might be a different gene than the smallest value on another array (see Figure\ref{lincp21.normalization} for a comparison of both normalizations).
+
+
+\end{itemize}
+
+\begin{figure}[lincp21.normalization]
+  \begin{center}
+    \includegraphics[width=4in]{lincp21_normalization_comparison.pdf}
+  \end{center}
+  \caption{\small {\bf Comparison of normalized expression data of a time course of lincP21 expression upon P53 induction. mc - Mean centered normalization, negative and positive values are collerd in dark light and dark green respectively. qn - Quantile normalization}}
+  \label{lincp21.normalization}
+\end{figure}
+
+{\bf Output:} A table in \href{http://www.broadinstitute.org/igv/}{IGV} format were each row is the normalized probe intensity across samples (data files) the columns are:
+\begin{itemize}
+\item Chromosome
+\item Start position of probe in chromosome
+\item End position of probe in chromosome.
+\item Probe name
+\item Next columns contain the probe's sample intensity.
+\end{itemize}
+
+{\bf Example:}
+
+
+java --Xmx1500m  --jar pda--0.8.jar --task 1 --indir ./ --ext .gff --floor 300 $>$ all.normalized.igv
+
+Normalizes all files with extension .gff in the current directory using 300 as the floor and outputting the normalized values to a file named all.normalized.igv
+
+This file is ready to load in the  \href{http://www.broadinstitute.org/igv/}{IGV}  browser, however it should be "pre-processed" to improve the load time and the responsiveness of the IGV application.
+
+{\em IGV preprocessing:} Can be done using IGV tools via the command:
+
+$\mathtt{igvtools\ tile <normalized IGV file> <output file> <genome id>} $  
+
+for example:
+$\mathtt{igvtools\ tile\ all.normalized.igv\ all.normalized.tdf\ mm8} $ 
+
+{\em Note:} Normalization of a large dataset can be performed on a laptop with 2 GB of RAM in ~5 minutes provided that the file access is not prohibitively slow.
+
+\subsection{Segmenting data}
+
+Normalized data is segmented by the following process:
+\begin{enumerate}
+\item We assume that tilling arrays were designed across a set of regions scattered across the genome (e.g. K4/K36 domains or pre-defined exons), the first step is to find these regions, this is done by collapsing all probes that are within a user-defined distance into "contiguous regions". 
+\item Scan a fixed window size across contiguous regions and score each window using a "scan" statistic.
+\item Use a non-parametric, permutation based null distribution to assess the significance of the scan statistic computed above. This is done by shuffling the probe intensities and rescanning as in the previous step.
+\item Filter all regions that are significant (users can either use a FWER or FDR based filter).
+\item Merge windows that pass the filter criteria into regions.
+\item The process is repeated using different windows. The idea being that short windows are suitable to find "punctuated" (short regions with very strong signal) while longer windows are suitable to find larger regions of sustained stronger than background signal.
+\end{enumerate}
+
+{\bf Note:} Segmentation of data is computationally intensive; the compute time is linear on the number of permutations. It can take around 10 minutes to generate the null distribution for 1000 permutations for one window size on one chromosome. It is therefore necessary to segment in parallel each chromosome, or even each window size.
+
+\subsubsection{Segmentation command}
+{\bf Command}: java -jar pda.$<$version$>$.jar -task 2 $<${\em parameters}$>$ 
+
+{\bf Parameters:}
+\begin{itemize}
+\item {\em -in} Table to segment, the program assumes the input is in IGV format previously created via the normalization routine described above.
+\item {\em -outdir} An output directory to write the results of segmenting the samples (columns) in the file.
+\end{itemize}
+{\bf Optional paramters:}
+\begin{itemize}
+\item {\em -chr} To segment data for only one chromosome. This is useful to process data in  parallel  and simultaneously segment each chromosome independently.
+\item {\em -colNames} If only a subset of the columns in the file should be segmented, their names should be entered as a  comma separated list.
+\item {\em -windows} Comma separated list of window sizes to scan. The window size is in number of consecutive proves. By default the program scans windows of sizes 5,7,9,10,15 and 20. 
+\item {\em -twoTailed} Flag that indicates whether significant tests should be done in both extremes of the scan statistic distribution. By default only the right tail is considered (windows with intensity higher than background).
+\item {\em -mergeDistance} Probes that are within this distance (in base pairs) are considered part of the same "contiguous region". Notice that analysis of  tiling exon arrays vs arrays tilling larger genomic regions should use different merge distances.
+\item {\em -randomizations} The number of permutations to do for each chromosome and window. The higher this parameter, the slower the program runs but the more precise the significance of the results. The default is 1000 permutations.
+\item {\em -alpha} Maximum FWER corrected pvalue to consider. Regions with less significance than $\alpha$ will not be reported. A default of $\alpha=0.1$ is used.
+\end{itemize}
+
+{\bf Output:} The output consists of one file per sample column, named after the sample name in the output directory indicated and an additional file names $\mathtt{ all.segments}$ containing the merged union of all segments found in each of the samples. Each file consists of two columns of data:
+\begin{itemize}
+\item Region location in the form chr$<$chromosome$>$:$<$start$>$--$<$end$>$
+\item The average expression (probe intensity) in the region
+\end{itemize}
+
+{\bf Example:}
+
+
+java --Xmx1500m  --jar pda--0.8.jar  --task 2 --randomizations 1000 --window 8  --colNames Lung --chr 16 --in /Users/mgarber/Documents/lincRNATools/tillingArrayFigure/linc\_foxf1\_data.igv --outdir /Users/mgarber/tmp/
+
+Will segment a previously normalized K4-K36 tilling array to obtain the putative exon structure. The inclusion of the -chr 16 parameters results in only chromosome 16 data being segmented.
+
+\subsection{Differential Expression}
+Similar to the segmentation procedure, to find differentially expressed exons between to sets of array experiments, a previously normalized dataset in IGV format is assumed as input. Given two column name lists, the program finds contiguous regions as described above, then runs a t-test to find regions such that the probes in each regions come from different distributions. As above, the program uses permutations to generate a null distribution of values to assess the significance of the t-test.
+
+A typical run using 1000 permutations takes about 10 minutes per sample per chromosome, it is thus feasible to run a small amounts of experiments in a regular laptop, but if more than a handful need to be run, then parallel processing is critical.
+
+\subsubsection{Differential expression analysis command}
+{\bf Command}: java -jar pda.$<$version$>$.jar -task 3 $<${\em parameters}$>$ 
+
+\begin{itemize}
+\item {\em -in} Input normalized file in IGV format, standard input can also be used instead of -in.
+\item {\em -out} Output file to write the results. If none is specified output goes to standard out.
+\item {\em -group1} Comma separated list of column names in input file that make one of the groups.
+\item {\em -group2} Comma separated list of column names in input file that make the other group.
+\end{itemize}
+{\bf Optional paramters:}
+\begin{itemize}
+\item {\em -chr} To segment data for only one chromosome. This is useful to process data in  parallel  and simultaneously segment each chromosome independently.
+\item {\em -mergeDistance} Probes that are within this distance (in base pairs) are considered part of the same "contiguous region". 
+\item {\em -randomizations} The number of permutations to do for each chromosome and window. The higher this parameter, the slower the program runs but the more precise the significance of the results. The default is 1000 permutations.
+\item {\em -alpha} Maximum FWER corrected pvalue to consider. Regions with less significance than $\alpha$ will not be reported. A default of $\alpha=0.1$ is used.
+\item {\em -filterByFDR} To use $\alpha$ as a FDR rather than FWER pvalue cutoff.
+\item {\em -regions} If rather than finding contiguous regions by merging probes a predefined set of regions exists (by using segmentation to find expressed exons for example),  the step of finding "contiguous regions" is skipped in favor of the regions provided.
+\item {\em -regionFileFormat} Format of the regions file, by default BED is assumed but GFF and UCSC region locations are also supported.
+\item {\em -gp} If this flag is set, the output will be written as a GCT file and can be readily used in Gene pattern.
+\end{itemize}
+
+{\bf Output:} The output is a table, the first three columns contain the main results of the analysis:
+\begin{itemize}
+\item Region location of the "contiguous region" in the form chr$<$chromosome$>$:$<$start$>$--$<$end$>$
+\item The FWER to asses the significance of rejecting the null hypothesis (the 2 groups have the same mean).
+\item The pvalue of the test (it will be FDR corrected if the -filterByFDR flag is included).
+\end{itemize}
+The following columns report the mean intensity of the region in each of the samples.
+
+{\bf Example:}
+
+java --Xmx1500m  --jar pda--0.8.jar -task 3 -randomizations 1000  -group1 2009\_07\_22\_252234\_V2\_532,2009\_07\_22\_252229\_532,2009\_07\_22\_259997\_635,2009\_07\_22\_259997\_532,2009\_07\_22\_252234\_635,2008-8-28-252465-GMP1\_635,2008-8-28-253077-CMP1\_635,2008-8-29-252218-MPP1-MPP2-3\_635 -group2 2008-8-29-252228-LKS1-LKS3-2\_635,2008-8-29-252228-LKS1-LKS3-2\_532,2008-8-29-252222-STT2-STT3-2\_532,2008-8-29-252221-LT2-ST1\_635,2008-8-29-252222-STT2-STT3-2\_635,2008-8-29-252221-LT2-ST1\_532 -gp $<$ tmp/all.normalized.igv  $>$ tmp/diff.vs.stem.diff.expr.gct
+
+Finds regions that are differentially expressed between the sets specified in the file normalized in the example in section 1.  Group 1 consists of differentiated samples while samples in group2 of pluripotent cells.
+
+\end{document}
