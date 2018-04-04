@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<project name="Demo" default="CreateExecutableJarFileWithExternalLibrary">
+	<target name="CreateExecutableJarFileWithExternalLibrary">
+		<jar destfile="T:/scripts/TestScripts/Bubbles.jar" basedir="bin/">
+			<zipfileset dir="" prefix="" />
+			<zipfileset src="c:/Local/mguttman/Analysis2/lib/ATV-3.1.jar" />
+			<zipfileset src="c:/Local/mguttman/Analysis2/lib/collections-generic-4.01.jar" />
+			<zipfileset src="c:/Local/mguttman/Analysis2/lib/colt-1.2.0.jar" />
+			<zipfileset src="c:/Local/mguttman/Analysis2/lib/commons-math-1.2-SNAPSHOT.jar" />
+			<zipfileset src="c:/Local/mguttman/Analysis2/lib/epsgraphics-1.jar" />
+			<zipfileset src="c:/Local/mguttman/Analysis2/lib/igv-client-1.0.jar" />
+			<zipfileset src="c:/Local/mguttman/Analysis2/lib/jaligner-1.0-MG.jar" />
+			<zipfileset src="c:/Local/mguttman/Analysis2/lib/JConnector-5.0.6.jar" />
+			<zipfileset src="c:/Local/mguttman/Analysis2/lib/jung-algorithms-2.0.jar" />
+			<zipfileset src="c:/Local/mguttman/Analysis2/lib/jung-api-2.0.jar" />
+			<zipfileset src="c:/Local/mguttman/Analysis2/lib/jung-graph-impl-2.0.jar" />
+			<zipfileset src="c:/Local/mguttman/Analysis2/lib/junit-4.4.jar" />
+			<zipfileset src="c:/Local/mguttman/Analysis2/lib/log4j-1.2.14.jar" />
+			<zipfileset src="c:/Local/mguttman/Analysis2/lib/picard-sam-1.03.jar" />
+			<zipfileset src="t:/scripts/mgarber/mammals-1.0-SNAPSHOT.jar" />
+			<manifest>
+				<attribute name="Main-Class" value="broad.pda.seq.segmentation.ContinuousDataAlignmentModel" />
+			</manifest>
+		</jar>
+	</target>
+</project>

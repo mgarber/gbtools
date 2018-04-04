@@ -1,0 +1,68 @@
+##maf version=1 scoring=maf_order
+# maf_project.v10 tba.maf human
+
+a score=4989.0
+s hg17.chr9  128764855 11 + 138429268 caacctctgac
+s chimp.chr11 113606177  9 + 123086034 --acctctgcc
+s baboon.1        96888 11 +    695787 caacctctgcc
+s marmoset.1     138325 11 +    681407 caacctctgcc
+
+a score=18081.0
+s hg17.chr9  128764866 78 + 138429268 tcccaggttcaaacgactctcctaccttagcctcccgaatagctgggattacaggcatgcgccaccacacctggctaa
+s chimp.chr11 113606186 78 + 123086034 tcccaggttcaaatgactctcctaccttagcctcccgaatagctgggattacaggcatgcgccaccacacctggctaa
+s baboon.1        96899 76 +    695787 tcctagattcagacgattctcctgccttagcctcccaa--agctgagattacaggcatgtgccaccacatccagctaa
+
+a score=127404.0
+s hg17.chr9  128764944 264 + 138429268 ttttgtatttttagtagagacaggatttcaccatgttggccagactggtcttgaactcttgacctcaagtgatccgcctgccttggcctcccaaagtgctgggattacaggcgtgagccaccgtgcccggtcCTAtttttatttttgcagagatggggtctcactttgttgcccaggctggtccagagctcctgggctaaagcgatcctcctgccttggccttccaaagtgctgggacaacaaggcatgagccaccgcgcccag
+s chimp.chr11 113606264 264 + 123086034 ttttgtatttttagtagagacaggatttcaccatgttggccagactggtcttgaactcttgacctcaagtgatccgcctgccttggcctcccaaagtgctgggattacaggcgtgagccaccatgcccggtcCTAtttttatttttgcagagatggagtctcactttgttgcccaggctggtccagagctcctcggctaaagcgatcctcctgccttggccttccaaagtgctgggacaacaaggcatgagccaccgcgcccag
+s baboon.1        96975 264 +    695787 ttttgtatttttactacagatgggatttcaccatgttggccaggctggtcttgaactcctgacctcaagtgatccacctgcctcggcctcccaaagtgctgggattacaggcgtgagtcactgtgcccagtcCTatttttatttttgtagagatggggtctcactttgttgcccaggctggtccagaactcctgggctaaagtgatcctcctgccttggccttccaaagtgccgggacaacaaggtgtgagccaccatgcccag
+s marmoset.1     138336 263 +    681407 tcctgggtttttagtagagacagggtttcaccatgttggctaggctggtcttgaaatcctaacctcaagtgatccacctccatcagcctctcaaagtgctgggattacaggtgtgagcaactgcg-ccagacctatttttatttttgtagagatggggtgtcactatgttgcccaggctggtcctgagctcctgagctaaagcaatcctcttgccttggccttccaaaatgctgggacagcaaggcatgagctgccatgcccag
+
+a score=31950.0
+s hg17.chr9  128765208 44 + 138429268 ccTGCCAGCTTCAATA--AAGGAGGCTGTACTGCT-ATCCCCGTTTG
+s chimp.chr11 113606528 45 + 123086034 ccTGCCAGCTTCAATA--AAGGAGGCTGTACTGCTTATCCCCATTTG
+s baboon.1        97239 44 +    695787 ccTGCCAGGTTCAATA--AAGGAGGCTGTACTGCT-ATCCACATTTG
+s marmoset.1     138599 44 +    681407 ccTGCCAGGTTCAATA--AAAGAGGCTGTACTGTC-ATCCCCATTTG
+s galago.1        87544 44 +    445664 CTTGCCAAATTTTTCG--AAGGAGTTTCTACTGTT-ATCCCTATGTG
+s armadillo.1       338 46 +    420596 TGGGCCATATGTcttaggaaggaggtactattgtt-atgcccatttg
+
+a score=8195.0
+s hg17.chr9  128765252 36 + 138429268 GTAGCCCGAGGGCCAGAGAAAGGAGGGCACTTACTT-
+s chimp.chr11 113606573 36 + 123086034 GTAGCCCGAGGGCCAGAGAAAGGAGGGCACTTACTT-
+s baboon.1        97283 32 +    695787 GTAGCCTGAGGGCCAGAGAAAGGAGGG----TACTT-
+s marmoset.1     138643 36 +    681407 GTACCCTGAGGGCCAGAAAGAAGAGGGAATTTACTT-
+s galago.1        87588 32 +    445664 ACAGTATGAATGTCTGAGAGAGAAACA----CACTT-
+s rfbat.1         21860 18 +    445008 ATTGAGTGATTGCCATAT-------------------
+s armadillo.1       384 30 +    420596 ccagtctgaggttcagaagtgaaa-------caattt
+
+a score=34166.0
+s hg17.chr9  128765288  70 + 138429268 GGTCAAGTTCTCACAATGGCCAG-ATAATCA-TGTATAGCCAATCTTT---------------------------------------------GAGAGGAAATATGTTT--CTAC---ATGA
+s chimp.chr11 113606609  70 + 123086034 GGTCAAGTTCTCACAATGGCCAG-ATAATCA-TGTATAGCCAATCTTT---------------------------------------------GAGAGGAAATATGTTT--CTAC---ATGA
+s baboon.1        97315  70 +    695787 GGTCAAGTTCTCACAATGACCAG-ATAATAA-TTTATAGCCAGTCTTT---------------------------------------------GAGAGGAAATATGTTT--CTAC---ATGA
+s marmoset.1     138679  46 +    681407 GGCCAAGTTATCACAGTGGCCAG-ATAATAA-TTTATAGCCAATCTTT--------------------------------------------------------------------------
+s galago.1        87620 105 +    445664 GGCCAAGTTCTCACAGTGGCCAG----ATCA-tttgtatttgatctttt--------taaaaatctgacagtatatcagaaacat--tcccatgtgagtaaatattttt--ctacaatatga
+s dog.chr9      6351473 119 -  53642819 GCCCAAGATCTTGCAATGGCTAAAatactaaatccgtgttcagcttttttttttttttccccatctcacagtatatcgggcacata-tgccatgtcagtaaatattttt--ctaccacatga
+s rfbat.1         21878  99 +    445008 GCCCAAATTCTCATAATGGCTGGGACACTAA-TTTGTACTCGGCTTTTT-------------------AAAAAAatcagggacatagtctcatgtcagtaaatattttt---taccacgtga
+s armadillo.1       414 118 +    420596 acccaagatctcagagcagggaagACACCAA-TTTGTACCCGCTTTTT---ATTTtttttccatttcacggtaaatcagaaacacatccccatgtcagtaaatatttttttctacaaaacgg
+
+a score=41897.0
+s hg17.chr9  128765358 75 + 138429268 tttttatcagctatactgtgttccaga-tagataaactatactttgttaaactaatccccttgcgctgagcattta
+s chimp.chr11 113606679 75 + 123086034 tttttatcagctatactgtgttccaga-tagataaactatactttgttaaactaatccccttgcgctgagcattta
+s baboon.1        97385 75 +    695787 TTTTTATCAGCTGTATTGTGTTCCAGA-TAGATAAACTATACTTTGCTGAACTAATCCCCTTGCACTGAGCATTTA
+s galago.1        87725 70 +    445664 tttttatca----tgttgtgttccaga-cagataaaccgtgcttggttaaacaaat-cccttgtgctgagggctta
+s cow.1          299803 62 +    749201 TTTCTATCACCTGTGTTACACTCCAGG-GAGATAAAGCATACTTCGTGTAATAGAATCCCGTG-------------
+s armadillo.1       532 70 +    420596 gttttatcc----tgttgtgttctgggctaaataaaccatgatttgttgaaacaatccttat--tacaggtgttta
+
+a score=64053.0
+s hg17.chr9  128765433 108 + 138429268 gattactccc-cacttggttctgtcatgaaacaaggctcagtgaatatccccatatgtatatgtATATCTTTGATCCCCTATTGCGTAATCCTCCTAAAACAATTCCTA
+s chimp.chr11 113606754 108 + 123086034 gattactccc-cacttggttctgtcatgaaacaaggctcagtgaatatccccatatgtatatgtATATCTTTGATCCCCTATTGCGTAATCCTCCTAAAACAATTCCTA
+s baboon.1        97460 108 +    695787 GATTACTCCC-CACTTAGTGCTGTCATTAAACAAAGCTCAGCAAATATCCCCATATGTATATGTATATCTTTGATCCCCTATTGCATAATCTTCCTAAAACAATTCCTA
+s galago.1        87795  94 +    445664 ggttattcccggactatttgctCCCAGTGAGCGAGGCTCAGTGGGCA--CCTGCAGGCACCTGTGGGTCTTTGCTCCCCTATTTCCTAATCTTTTT-------------
+s dog.chr9      6351667  92 -  53642819 ggttgtttct-gatgtattgttctcattcaaccagcatcagtgaataccctta-----attaatacatctttgctcCTCTATTTGTTAAGCCCCCAAT-----------
+s rfbat.1         22036  88 +    445008 ---cacttct-gatttattgctgtcattaaacaagcctcagtgaataccccca------tacagacatctttgctcCCCCATTTGCCAATCCCCCAAC-----------
+s armadillo.1       602  86 +    420596 ggttgcttct-gatttattgctcttcttaaacagtgttcagttagtaccttta------tacatctatctttACTTCCCTACTCGCTAATCCC----------------
+
+a score=64004.0
+s hg17.chr9  128765541 426 + 138429268 gctgtggctcacgtctgtaatcccaatccactttgtgatgccaaggtgggaggatcgcttgtgcacaggagttcaagaccagcttgggcaatatagcaagactccttctcta--aaaaaaaataaaactggccaggcgcggtggctcacctctgtaatcccagcactttgggaggccaaggcaggcggatcacctgaggtcaggagttggaga-------------------------------ctagcctggccaacatggcggaaccctgtctctactaaaaatacaaaaatttagctgggcgtggtggcgcacacctgtaatcctagctactcagaaggctgaggctggagaatcacttgaaccccgaaggcagagtttgcagtgagctgagatcatgccactgcactccagcctggtcaacagaacaagactgcgtctc-----aaaaataaaataaaca
+s chimp.chr11 113606862 426 + 123086034 gctgtggctcacgtctgtaatcccaatccactttgtgatgccaaggtgggaggatcgcttgtgcccaggagttcaagaccagcttgggcaatatagcaagactccttctcta--aaaaaaaataaaaCTggccaggcacggtggctcacctctgtaatcccagcactttgggaggccaaggcaggcggatcacctgaggtcaggagttggaga-------------------------------ctagcctggccaacatggcggaaccctgtctctactaaaaatacaaaaatttagctgggcgtggtggcgcacacctgtaatcctagctactcagaaggctgaggctggagaatcacttgaacccggaaggcagagtttgcagtgagctgagatcatgccactgcactccagcctggtcaacagaacaagactgcgtctt-----aaaaataaaataaaCA
+s baboon.1        97833 425 +    695787 gcggtggctcacgcctgtaatcccag--cactttgggaggccgagacgggcggatcac--gaggtcaggagatcgagaccattctggctaacatggtgaaagcccgtctctactaaaaatgcaaaaattaaccgggcgaggtggcgggcacctgtagtcccagctacacgggaggctgaggcaggagaatggcgtgaacctgggaggcggagcttgcagtgagccgagatccagtcactccactccagcctgggcgacagagccagactccgtctcaa--aaaaaaataaaaaataggccgggcgcggtggctcaagcctgtaatcccagcactttgggaggccgagatgggcggatcac---------gaggtcag---------------gagatcgaga---------ccatcctggctaacacggtgaaaccccgtctctactaagaaatacaaaaaata
