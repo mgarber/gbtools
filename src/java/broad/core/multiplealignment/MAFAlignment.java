@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -36,6 +38,7 @@ import broad.core.util.CLUtil.ArgumentMap;
 import broad.pda.annotation.BEDFileParser;
 import broad.pda.datastructures.Alignments;
 import broad.pda.gene.RefSeqGene;
+import umms.glab.nio.FileChannelBufferedReader;
 
 public class MAFAlignment extends MultipleAlignment {
 	static Logger logger = Logger.getLogger(MAFAlignment.class.getName());
@@ -44,6 +47,7 @@ public class MAFAlignment extends MultipleAlignment {
 
 	static final String HG17_ALIGN_DIR="/seq/genome/ucsc/multiz17way";
 	static final String HG17_ALIGN_REF_PREFIX="hg17.";
+	static final int READ_BUFFER_SIZE = 65536;
 	static final int indexPositionJump = 100000;
 	
 	MAFHeader header;
@@ -567,15 +571,21 @@ public class MAFAlignment extends MultipleAlignment {
 	*/
 	public void createIndex(String alignmentFile) throws IOException {
 		RandomAccessFile raf = new RandomAccessFile(alignmentFile,"r");
+		FileChannel rafChannel = raf.getChannel();
+		FileChannelBufferedReader fcbr = new FileChannelBufferedReader(rafChannel);
+		
+		fcbr.init();
+		
 		index = new LinkedHashMap<String, IntervalTree<Long>>();//LinkedHashMap<Integer, Long>();
 		String line;
 		String [] lineInfo= null;
 		long lastOffset = 0;
 		long counter = 0;
+		long lastStoredPosition = 0;
 		try {
 			boolean readNext = false;
 			
-			while((line = raf.readLine()) != null) {
+			while((line = fcbr.readLine()) != null) {
 				//Ignore all comment lines
 				if(line.startsWith("#") || line.trim().length() == 0){
 					continue;
@@ -596,10 +606,15 @@ public class MAFAlignment extends MultipleAlignment {
 						logger.debug("More than one reference or new reference, was "+(index.keySet().isEmpty()? "None": chrs.get(chrs.size() - 1))+ " now it is "+lineInfo[1]);
 						chrIndex = new IntervalTree<Long>();
 						index.put(lineInfo[1], chrIndex);
+						lastStoredPosition = 0;
 					}
 					int start = Integer.parseInt(lineInfo[2]);
 					int end   = Integer.parseInt(lineInfo[3]) + start;
-					chrIndex.put(start, end, lastOffset);
+					if(lastStoredPosition == 0 || start - lastStoredPosition > indexPositionJump) { //This is a major change (4/4/2018) where we now skip many entries in the index file to save space
+						chrIndex.put(start, end, lastOffset);
+						lastStoredPosition = start; //I think that the best reference to compute distance is the start in case an entry spans a very large block
+						logger.info("Stored block  " + line);
+					}
 					readNext = false;
 				}else if (line.startsWith("i ")) {
 					//We do not handle information lines yet.
