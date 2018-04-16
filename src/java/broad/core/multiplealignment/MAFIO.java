@@ -11,12 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import org.apache.log4j.Logger;
+
 import broad.core.error.ParseException;
 import broad.core.multiplealignment.MAFAlignment.MAFHeader;
 import broad.core.multiplealignment.MAFAlignment.MAFMultipleAlignmentBlock;
 import broad.core.multiplealignment.MultipleAlignment.AlignedSequence;
 
 public class MAFIO implements MultipleAlignmentIO {
+	static Logger logger = Logger.getLogger(MAFIO.class.getName());
+	public static final String SIPHY_MAF_INDEX_SUFIX = ".msidx";
+	
 	RandomAccessFile fileHandle;
 	MAFAlignment alignment;
 	String alignmentFile;
@@ -62,7 +67,7 @@ public class MAFIO implements MultipleAlignmentIO {
 	
 	public MAFAlignment createUnloadedAlignment(String fileName) throws IOException, ParseException {
 		MAFAlignment aln = new MAFAlignment();
-		String idxFileName = fileName + ".index";
+		String idxFileName = fileName + SIPHY_MAF_INDEX_SUFIX;
 		File idxFile = new File(idxFileName);
 		if(!idxFile.exists()) {
 			aln.createIndex(fileName);
@@ -80,7 +85,7 @@ public class MAFIO implements MultipleAlignmentIO {
 	
 	public MAFAlignment load(String fileName, List<String> sequencesToLoad) throws IOException, ParseException {
 		MAFAlignment aln = new MAFAlignment();
-		String idxFileName = fileName + ".index";
+		String idxFileName = fileName + SIPHY_MAF_INDEX_SUFIX;
 		File idxFile = new File(idxFileName);
 		if(!idxFile.exists()) {
 			aln.createIndex(fileName);
@@ -101,13 +106,13 @@ public class MAFIO implements MultipleAlignmentIO {
 	
 	public MAFAlignment load(String fileName, List<String> sequencesToLoad, int start, int end) throws IOException, ParseException {
 		MAFAlignment aln = new MAFAlignment();
-		String idxFileName = fileName + ".index";
+		String idxFileName = fileName + SIPHY_MAF_INDEX_SUFIX;
 		File idxFile = new File(idxFileName);
 		if(!idxFile.exists()) {
-			System.out.print("Index file not exists, creating and writing it: " + idxFileName);
+			logger.info("Index file not exists, creating and writing it: " + idxFileName);
 			aln.createIndex(fileName);
 			aln.writeIndex(idxFileName);
-			System.out.println("   Done writing index");
+			logger.info("   Done writing index");
 		} else {
 			aln = new MAFAlignment(idxFileName);
 		}
@@ -163,7 +168,7 @@ public class MAFIO implements MultipleAlignmentIO {
 				//System.out.println("ma  getReferenceId? " + ma.getReferenceId());
 				
 				if(aln.getReferenceId() == null) {
-					System.err.println("Ref is " + ma.getReferenceId());
+					logger.info("Ref is " + ma.getReferenceId());
 					aln.setReferenceId(alnSeq.getId());
 				} 
 				

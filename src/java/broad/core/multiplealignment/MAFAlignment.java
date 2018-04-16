@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,8 +44,6 @@ public class MAFAlignment extends MultipleAlignment {
 	private IntervalTree<MAFMultipleAlignmentBlock> alignmentBlockTree;
 	private List<String> sequenceIds;
 
-	static final String HG17_ALIGN_DIR="/seq/genome/ucsc/multiz17way";
-	static final String HG17_ALIGN_REF_PREFIX="hg17.";
 	static final int READ_BUFFER_SIZE = 65536;
 	static final int indexPositionJump = 100000;
 	
@@ -382,6 +379,7 @@ public class MAFAlignment extends MultipleAlignment {
 		//System.err.println("Starting to read file from " + offset + " from refstart " + referenceStart + " to refend " + referenceEnd);
 		alignmentBlockTree = new IntervalTree<MAFMultipleAlignmentBlock>();
 		handle.seek(offset);
+		FileChannelBufferedReader  handleFCBR = new FileChannelBufferedReader(handle.getChannel());
 		boolean okToAdd = true;
 		BasicGenomicAnnotation reference = new BasicGenomicAnnotation("reference");
 		reference.setStart(referenceStart);
@@ -398,7 +396,7 @@ public class MAFAlignment extends MultipleAlignment {
 		String line = null;
 		String [] lineInfo = null;
 		Stack<MAFMultipleAlignmentBlock> alignmentBlockStack = new Stack<MAFMultipleAlignmentBlock>();
-		while((line = handle.readLine()) != null) {
+		while((line = handleFCBR.readLine()) != null) {
 			//Ignore all comment lines
 			if(line.startsWith("#") || line.trim().length() == 0){
 				continue;
@@ -572,7 +570,7 @@ public class MAFAlignment extends MultipleAlignment {
 	public void createIndex(String alignmentFile) throws IOException {
 		RandomAccessFile raf = new RandomAccessFile(alignmentFile,"r");
 		FileChannel rafChannel = raf.getChannel();
-		FileChannelBufferedReader fcbr = new FileChannelBufferedReader(rafChannel);
+		FileChannelBufferedReader fcbr = new FileChannelBufferedReader(rafChannel, (int)  3*FileChannelBufferedReader.DEFALUT_BUFFER_SIZE);
 		
 		fcbr.init();
 		

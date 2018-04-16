@@ -93,9 +93,18 @@
 		</copy>
 	</target>
     
+	<target name="copy.test.resources" depends="init">
+		<copy todir="${build.dir}">
+		   <fileset dir="${src.dir}" includes="**/*.fq"/>
+			<fileset dir="${src.dir}" includes="**/*.mod"/>
+			<fileset dir="${src.dir}" includes="**/*.fa"/>
+			<fileset dir="${src.dir}" includes="**/*.maf"/>
+			<fileset dir="${src.dir}" includes="**/*.index"/>			
+		</copy>
+	</target>
     
     <!-- build the siphy jar-->
-    <target name="build" depends="unpack,compile,copy.props">  
+    <target name="build" depends="unpack,compile,copy.props,copy.test.resources">  
         <jar destfile="${jar.path}" basedir="${build.dir}" compress="true">
            <!-- <classfileset dir="${build.dir}">
                 <root classname="${main-class}"/>
